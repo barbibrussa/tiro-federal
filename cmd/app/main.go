@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/barbibrussa/tiro-federal/pkg/models"
+	"github.com/barbibrussa/tiro-federal/pkg/server"
 	"github.com/go-chi/chi"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -21,6 +22,8 @@ func main() {
 	}
 
 	r := chi.NewRouter()
+
+	s := server.NewServer(db)
 
 	err = http.ListenAndServe(":8080", r)
 	if err != nil {
