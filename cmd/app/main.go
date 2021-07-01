@@ -2,9 +2,11 @@ package main
 
 import (
 	"github.com/barbibrussa/tiro-federal/pkg/models"
+	"github.com/go-chi/chi"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -16,5 +18,12 @@ func main() {
 	err = db.AutoMigrate(&models.Member{})
 	if err != nil {
 		log.Fatal("Error while auto-migrating models: ", err)
+	}
+
+	r := chi.NewRouter()
+
+	err = http.ListenAndServe(":8080", r)
+	if err != nil {
+		log.Fatal("Error serving HTPP on port :8080 ", err)
 	}
 }
