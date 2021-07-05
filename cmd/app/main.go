@@ -25,6 +25,8 @@ func main() {
 
 	s := server.NewServer(db)
 
+	r.Post("/member", s.CreateMember)
+
 	err = http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatal("Error serving HTPP on port :8080 ", err)
