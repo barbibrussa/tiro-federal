@@ -25,7 +25,7 @@ func main() {
 
 	s := server.NewServer(db)
 
-	r.Post("/member", s.CreateMember)
+	r.Post("/members", s.CreateMember)
 
 	err = http.ListenAndServe(":8080", r)
 	if err != nil {

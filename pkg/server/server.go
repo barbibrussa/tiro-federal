@@ -12,10 +12,10 @@ type Server struct {
 	db *gorm.DB
 }
 
-func (s Server) CreateMember(w http.ResponseWriter, r *http.Request) {
+func (s *Server) CreateMember(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Failed to read requeast body", http.StatusBadRequest)
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
 		return
 	}
 
@@ -35,13 +35,13 @@ func (s Server) CreateMember(w http.ResponseWriter, r *http.Request) {
 
 	payload, err := json.Marshal(member)
 	if err != nil {
-		http.Error(w, "Failed to marshal risponse", http.StatusInternalServerError)
+		http.Error(w, "Failed to marshal response", http.StatusInternalServerError)
 		return
 	}
 
 	_, err = w.Write(payload)
 	if err != nil {
-		http.Error(w, "Fail to write response", http.StatusInternalServerError)
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
