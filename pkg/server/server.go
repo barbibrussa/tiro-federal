@@ -2,7 +2,9 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/barbibrussa/tiro-federal/pkg/models"
+	"github.com/go-chi/chi"
 	"gorm.io/gorm"
 	"io/ioutil"
 	"net/http"
@@ -66,6 +68,28 @@ func (s *Server) ListMembers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(body)
 	if err != nil {
 		http.Error(w, "Failed to write response", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+}
+
+func (s *Server) DeleteMember(w http.ResponseWriter, r *http.Request) {
+
+	id := chi.URLParam(r, "id")
+
+	var member models.Member
+
+	err := s.db.Model(&models.Member{}).Where("id = ?", id).First(&member).Error
+	if err != nil {
+		http.Error(w, "Failed to get member from database", http.StatusNotFound)
+		return
+	}
+
+	_, err = w.Write([]byte(fmt.Sprintf("Member id %s has been deleted", id)))
+	if err != nil {
+		http.Error(w, "Failed to writw response", http.StatusInternalServerError)
 		return
 	}
 
