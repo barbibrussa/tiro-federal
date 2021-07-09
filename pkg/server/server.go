@@ -47,6 +47,32 @@ func (s *Server) CreateMember(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+func (s *Server) ListMembers(w http.ResponseWriter, r *http.Request) {
+
+	var list []models.Member
+
+	err := s.db.Model(&models.Member{}).Find(&list).Error
+	if err != nil {
+		http.Error(w, "Failed to list members from database", http.StatusInternalServerError)
+		return
+	}
+
+	body, err := json.Marshal(list)
+	if err != nil {
+		http.Error(w, "Failed to marshal response", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = w.Write(body)
+	if err != nil {
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+}
+
 func NewServer(db *gorm.DB) *Server {
 	return &Server{db: db}
 }
