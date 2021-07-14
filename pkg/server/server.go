@@ -87,9 +87,15 @@ func (s *Server) DeleteMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = s.db.Delete(&models.Member{}, id).Error
+	if err != nil {
+		http.Error(w, "Failed to delete member", http.StatusInternalServerError)
+		return
+	}
+
 	_, err = w.Write([]byte(fmt.Sprintf("Member id %s has been deleted", id)))
 	if err != nil {
-		http.Error(w, "Failed to writw response", http.StatusInternalServerError)
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
 		return
 	}
 
