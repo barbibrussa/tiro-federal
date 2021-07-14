@@ -26,6 +26,7 @@ func main() {
 	s := server.NewServer(db)
 
 	r.Post("/members", s.CreateMember)
+	r.Get("/members", s.ListMembers)
 
 	err = http.ListenAndServe(":8080", r)
 	if err != nil {
