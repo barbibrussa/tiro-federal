@@ -103,6 +103,34 @@ func (s *Server) DeleteMember(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (s *Server) GetMemberByID(w http.ResponseWriter, r *http.Request) {
+
+	id := chi.URLParam(r, "id")
+
+	var member models.Member
+
+	err := s.db.Model(&models.Member{}).Where("id = ?", id).First(&member).Error
+	if err != nil {
+		http.Error(w, "Failed to get member from database", http.StatusNotFound)
+		return
+	}
+
+	body, err := json.Marshal(member)
+	if err != nil {
+		http.Error(w, "Failed to marshal response", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = w.Write(body)
+	if err != nil {
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+}
+
 func NewServer(db *gorm.DB) *Server {
 	return &Server{db: db}
 }

@@ -28,6 +28,7 @@ func main() {
 	r.Post("/members", s.CreateMember)
 	r.Get("/members", s.ListMembers)
 	r.Delete("/members/{id}", s.DeleteMember)
+	r.Get("members/{id}", s.GetMemberByID)
 
 	err = http.ListenAndServe(":8080", r)
 	if err != nil {
